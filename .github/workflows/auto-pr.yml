@@ -25,8 +25,8 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           pr_label: "auto-pr"
     permissions:
-      contents: write
       pull-requests: write
+      contents: write
 
     steps:
       - name: Checkout code
@@ -37,6 +37,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           title: "Auto PR: ${{ github.ref_name }}"
-          body: "This PR was automatically generated after push."
+          body: "This PR was automatically generated after pushing the branch."
           base: "master"
+          branch: ${{ github.ref_name }}
           labels: "auto-pr"
