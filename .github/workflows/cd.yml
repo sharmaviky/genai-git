@@ -10,41 +10,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Build Docker Image
         run: |
           docker build -t genai-app:latest .
 
-      - name: Save Docker Image as Tar
-        run: docker save genai-app:latest -o genai-app.tar
+      - name: Copy project files to server
+        uses: appleboy/scp-action@v0.1.5
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "./"
+          target: "/opt/genai-app/src"
 
-      - name: Deploy to WSL Docker
-        uses: appleboy/ssh-action@v0.1.6
+      - name: Run deployment script on server
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            echo "Copying Docker image tar file to server..."
-            cat > genai-app.tar
-
-            echo "Loading Docker image..."
-            docker load -i genai-app.tar
-
-            echo "Stopping old container if exists..."
-            docker stop genai-app || true
-            docker rm genai-app || true
-
-            echo "Running new container..."
-            docker run -d --name genai-app -p 3000:3000 genai-app:latest
-        # Upload file over SSH
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          command_timeout: 200s
-          script_stop: true
-          source: "genai-app.tar"
-          target: "./genai-app.tar"
+            cd /opt/genai-app
+            bash deploy.sh
