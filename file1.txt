@@ -4,3 +4,6 @@ Testing smart commit
 GenAI branching practice
 Version A change
 Version B change
+LINE-FROM-MASTER
+LINE-FROM-FEATURE
+
