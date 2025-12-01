@@ -24,5 +24,19 @@ jobs:
           pr_template: ""
           github_token: ${{ secrets.GITHUB_TOKEN }}
           pr_label: "auto-pr"
-          pr_allow_empty: false
-          pr_draft: false
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: "Auto PR: ${{ github.ref_name }}"
+          body: "This PR was automatically generated after push."
+          base: "master"
+          labels: "auto-pr"
