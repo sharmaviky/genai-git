@@ -2,3 +2,4 @@ This is my first git practice file
 AI updated this
 Testing smart commit
 GenAI branching practice
+Version A change
