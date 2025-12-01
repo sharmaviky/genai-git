@@ -1,0 +1,28 @@
+name: Auto Create Pull Request
+
+on:
+  push:
+    branches:
+      - "feature/*"
+      - "bugfix/*"
+      - "hotfix/*"
+
+jobs:
+  create_pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Create Pull Request
+        uses: repo-sync/pull-request@v2
+        with:
+          destination_branch: "master"
+          pr_title: "Auto PR: ${{ github.ref_name }}"
+          pr_body: "This pull request was automatically generated after push."
+          pr_template: ""
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_label: "auto-pr"
+          pr_allow_empty: false
+          pr_draft: false
