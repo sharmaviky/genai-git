@@ -4,3 +4,4 @@ Testing smart commit
 GenAI branching practice
 Version A change
 Version B change
+Rebase practice line
